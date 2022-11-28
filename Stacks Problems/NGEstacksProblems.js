@@ -263,3 +263,37 @@ var sumSubarrayMins = function (arr) {
 
 //  to get accepted in LeetCode -->
 // add this -->  let mod = 1000000007; and while returning ans ---> return (ans % mod);
+
+// GFG Problem --> Stock span problem
+// get into into this for problem : Try yourself first and if not get into solution :
+//https://practice.geeksforgeeks.org/problems/stock-span-problem-1587115621/1
+
+// solution :
+
+function calculateSpan(price, n) {
+  function findPreviousGreatestEleIndex(arr, n) {
+    const stack = [];
+    const prevGreEleIdxArr = [];
+
+    for (let i = 0; i < n; i++) {
+      while (stack.length > 0 && arr[stack[stack.length - 1]] <= arr[i]) {
+        stack.pop();
+      }
+      prevGreEleIdxArr[i] = stack.length == 0 ? -1 : stack[stack.length - 1];
+      stack.push(i);
+    }
+    return prevGreEleIdxArr;
+  }
+
+  const prevGreArr = findPreviousGreatestEleIndex(price, n);
+  const ans = [];
+
+  for (let i = 0; i < n; i++) {
+    let j = prevGreArr[i] == -1 ? i + 1 : i - prevGreArr[i];
+    ans.push(j);
+  }
+  return ans;
+}
+
+// console.log(calculateSpan([100, 80, 60, 70, 60, 75, 85], 7));
+// output-- > [1, 1, 1, 2, 1, 4, 6];
