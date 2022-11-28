@@ -194,3 +194,72 @@ function findSubArrayMinimum(arr, n) {
 
 // console.log(findSubArrayMinimum([3, 1, 2, 4], 4));
 //  output --> [ 1, 6, 2, 1 ]
+
+// LeetCode Problem : 907. Sum of Subarray Minimums :
+
+// Question Link : https://leetcode.com/problems/sum-of-subarray-minimums/
+
+// Given an array of integers arr, find the sum of min(b),
+// where b ranges over every (contiguous) subarray of arr.
+// Since the answer may be large, return the answer modulo 109 + 7.
+
+// Input: arr = [3,1,2,4]
+// Output: 17
+// Explanation:
+// Subarrays are [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4].
+// Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1.
+// Sum is 17.
+
+// solution :
+
+var sumSubarrayMins = function (arr) {
+  let n = arr.length;
+  function findPreviousSmallestOrEqualsToEleIndex(arr, n) {
+    const stack = [];
+    const prevSmallEleIdxArr = [];
+
+    for (let i = 0; i < n; i++) {
+      while (stack.length > 0 && arr[stack[stack.length - 1]] > arr[i]) {
+        stack.pop();
+      }
+      prevSmallEleIdxArr[i] = stack.length == 0 ? -1 : stack[stack.length - 1];
+      stack.push(i);
+    }
+    return prevSmallEleIdxArr;
+  }
+
+  function findNextSmallestEleIndex(arr, n) {
+    const stack = [];
+    const nextSmallEleIdxArr = [];
+
+    for (let i = n - 1; i >= 0; i--) {
+      while (stack.length > 0 && arr[stack[stack.length - 1]] >= arr[i]) {
+        stack.pop();
+      }
+      nextSmallEleIdxArr[i] = stack.length == 0 ? n : stack[stack.length - 1];
+      stack.push(i);
+    }
+    return nextSmallEleIdxArr;
+  }
+
+  const prevSmallOrEqToEleIdxArr = findPreviousSmallestOrEqualsToEleIndex(
+    arr,
+    n
+  );
+  const nextSmallEleIdxArr = findNextSmallestEleIndex(arr, n);
+
+  let ans = 0;
+
+  for (let i = 0; i < n; i++) {
+    let start = i - prevSmallOrEqToEleIdxArr[i];
+    let end = nextSmallEleIdxArr[i] - i;
+    ans += start * end * arr[i];
+  }
+  return ans;
+};
+
+// console.log(sumSubarrayMins([71, 55, 82, 55]));
+// output --> 593
+
+//  to get accepted in LeetCode -->
+// add this -->  let mod = 1000000007; and while returning ans ---> return (ans % mod);
