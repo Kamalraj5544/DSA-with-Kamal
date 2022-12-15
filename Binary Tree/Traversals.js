@@ -182,3 +182,29 @@ const postOrderTraversalIterative1 = function (root) {
 };
 
 // console.log(postOrderTraversalIterative1(root));
+
+// Breath First Search
+
+//  --> Level Order traversal :
+
+const levelOrder = function (root) {
+  if (root == null) return [];
+  let queue = [];
+  queue.push(root);
+  let ans = [];
+  while (queue.length > 0) {
+    let s = queue.length;
+    let sub = [];
+
+    for (let i = 0; i < s; i++) {
+      let cur = queue.shift();
+      sub.push(cur.val);
+      if (cur.left) queue.push(cur.left);
+      if (cur.right) queue.push(cur.right);
+    }
+    ans.push(sub);
+  }
+  return ans;
+};
+
+// console.log(levelOrder(root));
